@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP Server Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .server-info {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .response {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 3px;
+            margin-top: 10px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HTTP Server Demo</h1>
+        
+        <div class="server-info">
+            <h3>Server Information</h3>
+            <p><strong>API Server:</strong> <a href="http://localhost:4513" target="_blank">http://localhost:4513</a> (POST requests only)</p>
+            <p><strong>Web Server:</strong> <a href="http://localhost:4514" target="_blank">http://localhost:4514</a> (All requests)</p>
+        </div>
+
+        <div class="test-section">
+            <h3>Test API Server (Port 4513)</h3>
+            <p>This server only accepts POST requests.</p>
+            <button onclick="testApiPost()">Test POST Request</button>
+            <button onclick="testApiGet()">Test GET Request (Should Fail)</button>
+            <div id="api-response" class="response"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>Test Web Server (Port 4514)</h3>
+            <p>This server accepts all HTTP requests.</p>
+            <button onclick="testWebGet()">Test GET Request</button>
+            <button onclick="testWebPost()">Test POST Request</button>
+            <div id="web-response" class="response"></div>
+        </div>
+    </div>
+
+    <script>
+        async function makeRequest(port, method = 'GET') {
+            try {
+                const response = await fetch(`http://localhost:${port}`, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.text();
+                return {
+                    status: response.status,
+                    data: data
+                };
+            } catch (error) {
+                return {
+                    status: 'Error',
+                    data: error.message
+                };
+            }
+        }
+
+        async function testApiPost() {
+            const result = await makeRequest(4513, 'POST');
+            document.getElementById('api-response').innerHTML = 
+                `<strong>POST Response:</strong> ${result.status} - "${result.data}"`;
+        }
+
+        async function testApiGet() {
+            const result = await makeRequest(4513, 'GET');
+            document.getElementById('api-response').innerHTML = 
+                `<strong>GET Response:</strong> ${result.status} - "${result.data}"`;
+        }
+
+        async function testWebGet() {
+            const result = await makeRequest(4514, 'GET');
+            document.getElementById('web-response').innerHTML = 
+                `<strong>GET Response:</strong> ${result.status} - "${result.data}"`;
+        }
+
+        async function testWebPost() {
+            const result = await makeRequest(4514, 'POST');
+            document.getElementById('web-response').innerHTML = 
+                `<strong>POST Response:</strong> ${result.status} - "${result.data}"`;
+        }
+    </script>
+</body>
+</html> 

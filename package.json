@@ -1,0 +1,28 @@
+{
+  "name": "http-server-demo",
+  "version": "1.0.0",
+  "description": "A simple HTTP server hosting both website and API",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsc && node dist/server.js",
+    "test": "tsc && node dist/test.js",
+    "clean": "rm -rf dist node_modules"
+  },
+  "keywords": [
+    "http",
+    "server",
+    "api",
+    "website"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.14",
+    "typescript": "^5.8.3"
+  }
+}
